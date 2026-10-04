@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>日本地図でめぐる！旅サラダはまちゃん資料館</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        sans-serif;
+      background: #f7f7f7;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px 25px;
+      background: white;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      color: #666;
+    }
+
+    main {
+      width: min(1200px, calc(100% - 30px));
+      margin: 30px auto 60px;
+    }
+
+
+    /* =========================
+       日本地図
+    ========================= */
+
+    .map-section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+    }
+
+    .map-section h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .map-note {
+      text-align: center;
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+
+    /*
+      日本列島を
+      15列 × 14行のマスで表現
+    */
+
+    .japan-map {
+      display: grid;
+
+      grid-template-columns:
+        repeat(15, 58px);
+
+      grid-template-rows:
+        repeat(14, 48px);
+
+      gap: 4px;
+
+      width: max-content;
+      margin: 0 auto;
+
+      padding: 15px;
+    }
+
+
+    .prefecture {
+      border: 0;
+      border-radius: 8px;
+
+      padding: 4px;
+
+      background: #eeeeee;
+      color: #aaa;
+
+      font-size: 11px;
+      line-height: 1.25;
+
+      cursor: default;
+
+      transition:
+        transform 0.15s,
+        background 0.15s,
+        box-shadow 0.15s;
+    }
+
+
+    /* 動画あり */
+
+    .prefecture.has-video {
+      background: #e5d6f5;
+      color: #55366f;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    .prefecture.has-video:hover {
+      transform: translateY(-2px);
+
+      background: #d6bdec;
+
+      box-shadow:
+        0 4px 10px
+        rgba(85, 54, 111, 0.18);
+    }
+
+
+    /* 選択中 */
+
+    .prefecture.selected {
+      background: #765091;
+      color: white;
+    }
+
+
+    .count {
+      display: block;
+
+      margin-top: 2px;
+
+      font-size: 10px;
+
+      opacity: 0.8;
+    }
+
+
+    /* =========================
+       動画一覧
+    ========================= */
+
+    .result-section {
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+    }
+
+
+    .result-header {
+      margin: 35px 0 20px;
+    }
+
+
+    #resultTitle {
+      margin-bottom: 5px;
+    }
+
+
+    #resultCount {
+      color: #777;
+    }
+
+
+    /*
+      ★ここを変更！
+
+      PCでは常に3列。
+
+      動画が1本しかなくても
+      横幅いっぱいに伸びず、
+      3列のうち1列分だけ使う。
+    */
+
+    .video-list {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 22px;
+    }
+
+
+    .video-card {
+      background: white;
+
+      border-radius: 16px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, 0.08);
+    }
+
+
+    .thumbnail-link {
+      display: block;
+      background: #ddd;
+    }
+
+
+    .thumbnail {
+      display: block;
+
+      width: 100%;
+
+      aspect-ratio: 16 / 9;
+
+      object-fit: cover;
+    }
+
+
+    .video-info {
+      padding: 17px;
+    }
+
+
+    .location {
+      margin-bottom: 8px;
+
+      font-size: 14px;
+
+      color: #765091;
+
+      font-weight: bold;
+    }
+
+
+    .video-title {
+      margin: 0 0 12px;
+
+      font-size: 17px;
+
+      line-height: 1.5;
+    }
+
+
+    .introduced {
+      margin: 0 0 12px;
+
+      line-height: 1.6;
+    }
+
+
+    .meta {
+      color: #888;
+
+      font-size: 13px;
+
+      margin-bottom: 15px;
+    }
+
+
+    .youtube-link {
+      display: inline-block;
+
+      text-decoration: none;
+
+      background: #333;
+
+      color: white;
+
+      padding: 9px 14px;
+
+      border-radius: 8px;
+
+      font-size: 14px;
+    }
+
+
+    .youtube-link:hover {
+      opacity: 0.8;
+    }
+
+
+    .error {
+      background: #fff0f0;
+
+      color: #a00;
+
+      padding: 20px;
+
+      border-radius: 10px;
+    }
+
+
+    /* =========================
+       タブレット
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .video-list {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+    }
+
+
+    /* =========================
+       スマホ
+    ========================= */
+
+    @media (max-width: 700px) {
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .map-section {
+        padding: 18px 8px;
+      }
+
+      .japan-map {
+        transform-origin: top left;
+      }
+
+      .video-list {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+<header>
+
+  <h1>
+    🗾 日本地図でめぐる！<br>
+    旅サラダはまちゃん資料館
+  </h1>
+
+  <p>
+    都道府県をクリックすると、
+    その土地の動画が見つかります。
+  </p>
+
+</header>
+
+
+<main>
+
+  <section class="map-section">
+
+    <h2>
+      行きたい都道府県を選んでね
+    </h2>
+
+    <p class="map-note">
+      💜 色がついている都道府県には
+      はまちゃんの動画があります
+    </p>
+
+
+    <div
+      class="japan-map"
+      id="japanMap"
+    ></div>
+
+  </section>
+
+
+
+  <section
+    class="result-section"
+    id="resultSection"
+  >
+
+    <div class="result-header">
+
+      <h2 id="resultTitle"></h2>
+
+      <div id="resultCount"></div>
+
+    </div>
+
+
+    <div
+      class="video-list"
+      id="videoList"
+    ></div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+
+/* ==================================================
+   日本地図配置データ
+
+   row = 上から何段目
+   col = 左から何列目
+================================================== */
+
+const prefecturePositions = {
+
+  /* 北海道 */
+
+  "北海道": {
+    row: 1,
+    col: 13
+  },
+
+
+  /* 東北 */
+
+  "青森県": {
+    row: 3,
+    col: 12
+  },
+
+  "秋田県": {
+    row: 4,
+    col: 11
+  },
+
+  "岩手県": {
+    row: 4,
+    col: 12
+  },
+
+  "山形県": {
+    row: 5,
+    col: 11
+  },
+
+  "宮城県": {
+    row: 5,
+    col: 12
+  },
+
+  "福島県": {
+    row: 6,
+    col: 12
+  },
+
+
+  /* 関東 */
+
+  "茨城県": {
+    row: 7,
+    col: 13
+  },
+
+  "栃木県": {
+    row: 7,
+    col: 12
+  },
+
+  "群馬県": {
+    row: 7,
+    col: 11
+  },
+
+  "埼玉県": {
+    row: 8,
+    col: 12
+  },
+
+  "千葉県": {
+    row: 9,
+    col: 13
+  },
+
+  "東京都": {
+    row: 9,
+    col: 12
+  },
+
+  "神奈川県": {
+    row: 10,
+    col: 12
+  },
+
+
+  /* 甲信越・北陸 */
+
+  "新潟県": {
+    row: 6,
+    col: 10
+  },
+
+  "富山県": {
+    row: 7,
+    col: 9
+  },
+
+  "石川県": {
+    row: 7,
+    col: 8
+  },
+
+  "福井県": {
+    row: 8,
+    col: 7
+  },
+
+  "山梨県": {
+    row: 9,
+    col: 11
+  },
+
+  "長野県": {
+    row: 8,
+    col: 10
+  },
+
+
+  /* 東海 */
+
+  "岐阜県": {
+    row: 9,
+    col: 8
+  },
+
+  "静岡県": {
+    row: 10,
+    col: 10
+  },
+
+  "愛知県": {
+    row: 10,
+    col: 9
+  },
+
+  "三重県": {
+    row: 11,
+    col: 8
+  },
+
+
+  /* 近畿 */
+
+  "滋賀県": {
+    row: 9,
+    col: 7
+  },
+
+  "京都府": {
+    row: 9,
+    col: 6
+  },
+
+  "大阪府": {
+    row: 10,
+    col: 6
+  },
+
+  "兵庫県": {
+    row: 10,
+    col: 5
+  },
+
+  "奈良県": {
+    row: 10,
+    col: 7
+  },
+
+  "和歌山県": {
+    row: 11,
+    col: 6
+  },
+
+
+  /* 中国 */
+
+  "鳥取県": {
+    row: 9,
+    col: 4
+  },
+
+  "島根県": {
+    row: 9,
+    col: 3
+  },
+
+  "岡山県": {
+    row: 10,
+    col: 4
+  },
+
+  "広島県": {
+    row: 10,
+    col: 3
+  },
+
+  "山口県": {
+    row: 10,
+    col: 2
+  },
+
+
+  /* 四国 */
+
+  "徳島県": {
+    row: 12,
+    col: 5
+  },
+
+  "香川県": {
+    row: 11,
+    col: 4
+  },
+
+  "愛媛県": {
+    row: 12,
+    col: 3
+  },
+
+  "高知県": {
+    row: 13,
+    col: 4
+  },
+
+
+  /* 九州 */
+
+  "福岡県": {
+    row: 9,
+    col: 1
+  },
+
+  "佐賀県": {
+    row: 10,
+    col: 1
+  },
+
+  "長崎県": {
+    row: 11,
+    col: 1
+  },
+
+  "熊本県": {
+    row: 11,
+    col: 2
+  },
+
+  "大分県": {
+    row: 10,
+    col: 2
+  },
+
+  "宮崎県": {
+    row: 12,
+    col: 2
+  },
+
+  "鹿児島県": {
+    row: 13,
+    col: 2
+  },
+
+
+  /* 沖縄 */
+
+  "沖縄県": {
+    row: 14,
+    col: 1
+  }
+
+};
+
+
+
+/* ==================================================
+   HTML要素
+================================================== */
+
+const mapElement =
+  document.getElementById("japanMap");
+
+
+const resultSection =
+  document.getElementById("resultSection");
+
+
+const resultTitle =
+  document.getElementById("resultTitle");
+
+
+const resultCount =
+  document.getElementById("resultCount");
+
+
+const videoList =
+  document.getElementById("videoList");
+
+
+
+/* ==================================================
+   動画データ
+================================================== */
+
+let videos = [];
+
+
+
+/* ==================================================
+   JSON読み込み
+================================================== */
+
+async function loadVideos() {
+
+  try {
+
+    const response =
+      await fetch("./videos.json");
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "videos.json を読み込めませんでした。"
+      );
+
+    }
+
+
+    videos =
+      await response.json();
+
+
+    console.log(
+      `${videos.length}本の動画を読み込みました`
+    );
+
+
+    createMap();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    mapElement.innerHTML = `
+
+      <div class="error">
+
+        videos.json を読み込めませんでした。<br>
+
+        Live Serverで開いているか
+        確認してください。
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+
+/* ==================================================
+   日本地図を作る
+================================================== */
+
+function createMap() {
+
+  mapElement.innerHTML = "";
+
+
+  Object.entries(
+    prefecturePositions
+  ).forEach(
+    ([prefecture, position]) => {
+
+
+      const button =
+        document.createElement("button");
+
+
+      button.className =
+        "prefecture";
+
+
+      button.style.gridRow =
+        position.row;
+
+
+      button.style.gridColumn =
+        position.col;
+
+
+
+      /*
+        この県にある動画
+      */
+
+      const prefectureVideos =
+        videos.filter(
+          video =>
+            video["都道府県"] ===
+            prefecture
+        );
+
+
+      const count =
+        prefectureVideos.length;
+
+
+
+      /*
+        県名
+      */
+
+      button.innerHTML =
+        `<span>${prefecture}</span>`;
+
+
+
+      /*
+        動画がある県
+      */
+
+      if (count > 0) {
+
+        button.classList.add(
+          "has-video"
+        );
+
+
+        button.innerHTML +=
+          `<span class="count">
+            🎬 ${count}
+          </span>`;
+
+
+        button.addEventListener(
+          "click",
+          () =>
+            showVideos(
+              prefecture,
+              button
+            )
+        );
+
+      }
+
+
+      mapElement.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+
+
+/* ==================================================
+   動画を表示
+================================================== */
+
+function showVideos(
+  prefecture,
+  clickedButton
+) {
+
+
+  document
+    .querySelectorAll(
+      ".prefecture"
+    )
+    .forEach(
+      button =>
+        button.classList.remove(
+          "selected"
+        )
+    );
+
+
+
+  clickedButton
+    .classList
+    .add("selected");
+
+
+
+  const filteredVideos =
+    videos.filter(
+      video =>
+        video["都道府県"] ===
+        prefecture
+    );
+
+
+
+  /*
+    公開日の新しい順
+  */
+
+  filteredVideos.sort(
+    (a, b) =>
+      new Date(b["公開日"]) -
+      new Date(a["公開日"])
+  );
+
+
+
+  resultTitle.textContent =
+    `📍 ${prefecture}`;
+
+
+  resultCount.textContent =
+    `${filteredVideos.length}本の動画があります`;
+
+
+
+  videoList.innerHTML = "";
+
+
+
+  filteredVideos.forEach(
+    video => {
+
+      const card =
+        createVideoCard(video);
+
+
+      videoList.appendChild(card);
+
+    }
+  );
+
+
+
+  resultSection
+    .classList
+    .add("show");
+
+
+
+  resultSection.scrollIntoView({
+
+    behavior: "smooth",
+
+    block: "start"
+
+  });
+
+}
+
+
+
+/* ==================================================
+   動画カード
+================================================== */
+
+function createVideoCard(video) {
+
+
+  const card =
+    document.createElement(
+      "article"
+    );
+
+
+  card.className =
+    "video-card";
+
+
+
+  /*
+    YouTube動画IDから
+    サムネイルを表示
+  */
+
+  const thumbnailUrl =
+    `https://i.ytimg.com/vi/${video["動画ID"]}/hqdefault.jpg`;
+
+
+
+  /*
+    場所
+  */
+
+  const location =
+    video["市区町村"]
+
+      ? `${video["都道府県"]} ${video["市区町村"]}`
+
+      : video["都道府県"];
+
+
+
+  /*
+    紹介したもの
+  */
+
+  const introduced =
+    video["紹介したもの"]
+      ? escapeHTML(
+          video["紹介したもの"]
+        )
+      : "";
+
+
+
+  /*
+    内容タグ
+    今は空欄でもOK
+  */
+
+  const tags =
+    video["内容タグ"]
+      ? escapeHTML(
+          video["内容タグ"]
+        )
+      : "";
+
+
+
+  card.innerHTML = `
+
+
+    <a
+      class="thumbnail-link"
+
+      href="${escapeAttribute(
+        video["URL"]
+      )}"
+
+      target="_blank"
+
+      rel="noopener noreferrer"
+    >
+
+      <img
+        class="thumbnail"
+
+        src="${thumbnailUrl}"
+
+        alt=""
+
+        loading="lazy"
+      >
+
+    </a>
+
+
+
+    <div class="video-info">
+
+
+      <div class="location">
+
+        📍 ${escapeHTML(location)}
+
+      </div>
+
+
+
+      <h3 class="video-title">
+
+        ${escapeHTML(
+          video["タイトル"]
+        )}
+
+      </h3>
+
+
+
+      ${
+        introduced
+
+          ? `
+            <p class="introduced">
+
+              🍴 ${introduced}
+
+            </p>
+          `
+
+          : ""
+      }
+
+
+
+      ${
+        tags
+
+          ? `
+            <p class="introduced">
+
+              🏷️ ${tags}
+
+            </p>
+          `
+
+          : ""
+      }
+
+
+
+      <div class="meta">
+
+        ${escapeHTML(
+          video["公開日"]
+        )}
+
+        ${
+          video["動画／ショート"]
+
+            ? ` ｜ ${escapeHTML(
+                video["動画／ショート"]
+              )}`
+
+            : ""
+        }
+
+      </div>
+
+
+
+      <a
+        class="youtube-link"
+
+        href="${escapeAttribute(
+          video["URL"]
+        )}"
+
+        target="_blank"
+
+        rel="noopener noreferrer"
+      >
+
+        ▶ YouTubeで見る
+
+      </a>
+
+
+    </div>
+
+  `;
+
+
+  return card;
+
+}
+
+
+
+/* ==================================================
+   HTMLエスケープ
+================================================== */
+
+function escapeHTML(value) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+
+function escapeAttribute(value) {
+
+  return escapeHTML(value);
+
+}
+
+
+
+/* ==================================================
+   START
+================================================== */
+
+loadVideos();
+
+
+</script>
+
+</body>
+</html>
