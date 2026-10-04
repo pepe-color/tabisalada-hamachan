@@ -32,16 +32,18 @@
     h1 {
       margin: 0 0 10px;
       font-size: 28px;
+      line-height: 1.45;
     }
 
     header p {
       margin: 0;
       color: #666;
+      line-height: 1.7;
     }
 
     main {
       width: min(1200px, calc(100% - 30px));
-      margin: 30px auto 60px;
+      margin: 30px auto 40px;
     }
 
 
@@ -54,11 +56,10 @@
       border-radius: 20px;
       padding: 25px;
       margin-bottom: 30px;
-      overflow: hidden;
     }
 
     .map-section h2 {
-      margin-top: 0;
+      margin: 0 0 12px;
       text-align: center;
     }
 
@@ -66,49 +67,51 @@
       text-align: center;
       color: #777;
       font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .map-viewport {
-      width: 100%;
-      display: flex;
-      justify-content: center;
+      margin: 0 0 24px;
     }
 
 
     /*
-      PC版日本地図
+      Ver.0.09
 
-      13列 × 14行
+      参考画像準拠の
+      ブロック型日本地図
+
+      PC / スマホ共通配置
     */
 
     .japan-map {
       display: grid;
 
       grid-template-columns:
-        repeat(13, 58px);
+        repeat(13, minmax(0, 1fr));
 
-      grid-auto-rows: 48px;
+      grid-auto-rows:
+        clamp(42px, 5vw, 60px);
 
-      gap: 4px;
+      gap: 3px;
 
-      width: max-content;
+      width: min(100%, 850px);
 
-      padding: 8px;
+      margin: 0 auto;
     }
 
 
     .prefecture {
-      border: 0;
-      border-radius: 8px;
+      min-width: 0;
 
-      padding: 4px;
+      border: 0;
+      border-radius: 7px;
+
+      padding: 3px 2px;
 
       background: #eeeeee;
       color: #aaa;
 
-      font-size: 11px;
-      line-height: 1.25;
+      font-size:
+        clamp(9px, 1.15vw, 12px);
+
+      line-height: 1.2;
 
       cursor: default;
 
@@ -122,6 +125,7 @@
     .prefecture.has-video {
       background: #e5d6f5;
       color: #55366f;
+
       font-weight: bold;
       cursor: pointer;
     }
@@ -129,6 +133,7 @@
 
     .prefecture.has-video:hover {
       transform: translateY(-2px);
+
       background: #d6bdec;
 
       box-shadow:
@@ -145,9 +150,13 @@
 
     .count {
       display: block;
+
       margin-top: 2px;
-      font-size: 10px;
-      opacity: 0.8;
+
+      font-size:
+        clamp(8px, 0.95vw, 10px);
+
+      opacity: 0.85;
     }
 
 
@@ -188,7 +197,9 @@
 
     .video-card {
       background: white;
+
       border-radius: 16px;
+
       overflow: hidden;
 
       box-shadow:
@@ -205,9 +216,11 @@
 
     .thumbnail {
       display: block;
+
       width: 100%;
 
       aspect-ratio: 16 / 9;
+
       object-fit: cover;
     }
 
@@ -221,7 +234,9 @@
       margin-bottom: 8px;
 
       font-size: 14px;
+
       color: #765091;
+
       font-weight: bold;
     }
 
@@ -230,19 +245,23 @@
       margin: 0 0 12px;
 
       font-size: 17px;
+
       line-height: 1.5;
     }
 
 
     .introduced {
       margin: 0 0 12px;
+
       line-height: 1.6;
     }
 
 
     .meta {
       color: #888;
+
       font-size: 13px;
+
       margin-bottom: 15px;
     }
 
@@ -253,9 +272,11 @@
       text-decoration: none;
 
       background: #333;
+
       color: white;
 
       padding: 9px 14px;
+
       border-radius: 8px;
 
       font-size: 14px;
@@ -268,11 +289,31 @@
 
 
     .error {
+      grid-column: 1 / -1;
+
       background: #fff0f0;
+
       color: #a00;
 
       padding: 20px;
+
       border-radius: 10px;
+    }
+
+
+    /* =========================
+       更新日
+    ========================= */
+
+    .last-updated {
+      text-align: center;
+
+      color: #999;
+
+      font-size: 13px;
+
+      margin:
+        30px 0 10px;
     }
 
 
@@ -308,24 +349,26 @@
 
       h1 {
         font-size: 22px;
-        line-height: 1.45;
       }
 
 
       header p {
         font-size: 14px;
-        line-height: 1.6;
       }
 
 
       main {
         width: calc(100% - 12px);
-        margin: 12px auto 40px;
+
+        margin:
+          12px auto 30px;
       }
 
 
       .map-section {
-        padding: 18px 4px 20px;
+        padding:
+          18px 4px 20px;
+
         border-radius: 16px;
       }
 
@@ -333,56 +376,56 @@
       .map-section h2 {
         font-size: 18px;
 
-        padding: 0 10px;
+        padding: 0 8px;
+
         margin-bottom: 12px;
       }
 
 
       .map-note {
         font-size: 12px;
+
         line-height: 1.5;
 
         margin-bottom: 18px;
+
         padding: 0 8px;
       }
 
 
       /*
-        ★ Ver.0.05
+        SPでも同じ地図配置。
 
-        スマホでは縮小しない。
-
-        9列の縦長日本列島へ
-        配置そのものを変更！
+        13列を画面いっぱいに表示。
       */
 
       .japan-map {
-        grid-template-columns:
-          repeat(9, minmax(0, 1fr));
-
-        grid-auto-rows: 43px;
-
-        gap: 3px;
-
         width: 100%;
 
-        padding: 4px;
+        grid-template-columns:
+          repeat(13, minmax(0, 1fr));
+
+        grid-auto-rows:
+          clamp(34px, 7.2vw, 44px);
+
+        gap: 2px;
       }
 
 
       .prefecture {
-        min-width: 0;
+        border-radius: 5px;
 
-        padding: 2px;
+        padding: 1px;
 
-        border-radius: 7px;
-
-        font-size: 10px;
+        font-size:
+          clamp(7px, 1.95vw, 9px);
       }
 
 
       .count {
-        font-size: 9px;
+        font-size:
+          clamp(6px, 1.7vw, 8px);
+
         margin-top: 1px;
       }
 
@@ -394,6 +437,11 @@
 
       .result-header {
         margin-top: 25px;
+      }
+
+
+      .last-updated {
+        font-size: 12px;
       }
 
     }
@@ -433,14 +481,10 @@
     </p>
 
 
-    <div class="map-viewport">
-
-      <div
-        class="japan-map"
-        id="japanMap"
-      ></div>
-
-    </div>
+    <div
+      class="japan-map"
+      id="japanMap"
+    ></div>
 
   </section>
 
@@ -467,6 +511,11 @@
 
   </section>
 
+
+  <p class="last-updated">
+    2026年10月4日更新
+  </p>
+
 </main>
 
 
@@ -474,233 +523,286 @@
 
 
 /* ==================================================
-   PC版 日本地図配置
+   Ver.0.09
+
+   参考画像準拠
+   ブロック型日本地図
 ================================================== */
 
-const desktopPositions = {
+const prefecturePositions = {
 
-  "北海道": { row: 1, col: 13 },
 
-  "青森県": { row: 3, col: 12 },
+  /* 北海道 */
 
-  "秋田県": { row: 4, col: 11 },
-  "岩手県": { row: 4, col: 12 },
+  "北海道": {
+    row: 1,
+    col: 13
+  },
 
-  "山形県": { row: 5, col: 11 },
-  "宮城県": { row: 5, col: 12 },
 
-  "福島県": { row: 6, col: 12 },
+  /* 東北 */
 
+  "青森県": {
+    row: 2,
+    col: 13
+  },
 
-  "茨城県": { row: 7, col: 13 },
-  "栃木県": { row: 7, col: 12 },
-  "群馬県": { row: 7, col: 11 },
+  "秋田県": {
+    row: 3,
+    col: 12
+  },
 
-  "埼玉県": { row: 8, col: 12 },
+  "岩手県": {
+    row: 3,
+    col: 13
+  },
 
-  "千葉県": { row: 9, col: 13 },
-  "東京都": { row: 9, col: 12 },
+  "山形県": {
+    row: 4,
+    col: 12
+  },
 
-  "神奈川県": { row: 10, col: 12 },
+  "宮城県": {
+    row: 4,
+    col: 13
+  },
 
+  "新潟県": {
+    row: 5,
+    col: 12
+  },
 
-  "新潟県": { row: 6, col: 10 },
+  "福島県": {
+    row: 5,
+    col: 13
+  },
 
-  "富山県": { row: 7, col: 9 },
-  "石川県": { row: 7, col: 8 },
 
-  "福井県": { row: 8, col: 7 },
+  /* 北陸・関東 */
+
+  "富山県": {
+    row: 6,
+    col: 11
+  },
+
+  "群馬県": {
+    row: 6,
+    col: 12
+  },
 
-  "山梨県": { row: 9, col: 11 },
-  "長野県": { row: 8, col: 10 },
-
-
-  "岐阜県": { row: 9, col: 8 },
-
-  "静岡県": { row: 10, col: 10 },
-  "愛知県": { row: 10, col: 9 },
-
-  "三重県": { row: 11, col: 8 },
-
-
-  "滋賀県": { row: 9, col: 7 },
-  "京都府": { row: 9, col: 6 },
-
-  "大阪府": { row: 10, col: 6 },
-  "兵庫県": { row: 10, col: 5 },
-  "奈良県": { row: 10, col: 7 },
-
-  "和歌山県": { row: 11, col: 6 },
-
-
-  "鳥取県": { row: 9, col: 4 },
-  "島根県": { row: 9, col: 3 },
-
-  "岡山県": { row: 10, col: 4 },
-  "広島県": { row: 10, col: 3 },
-  "山口県": { row: 10, col: 2 },
-
-
-  "徳島県": { row: 12, col: 5 },
-  "香川県": { row: 11, col: 4 },
-
-  "愛媛県": { row: 12, col: 3 },
-  "高知県": { row: 13, col: 4 },
-
-
-  "福岡県": { row: 9, col: 1 },
-
-  "佐賀県": { row: 10, col: 1 },
-  "大分県": { row: 10, col: 2 },
-
-  "長崎県": { row: 11, col: 1 },
-  "熊本県": { row: 11, col: 2 },
-
-  "宮崎県": { row: 12, col: 2 },
-
-  "鹿児島県": { row: 13, col: 2 },
-
-  "沖縄県": { row: 14, col: 1 }
-
-};
-
-
-
-/* ==================================================
-   ★ スマホ版 日本地図配置
-
-   9列で縦長に再設計
-================================================== */
-
-const mobilePositions = {
-
-  /*
-    北海道
-  */
-
-  "北海道": { row: 1, col: 8 },
-
-
-  /*
-    東北
-  */
-
-  "青森県": { row: 3, col: 7 },
-
-  "秋田県": { row: 4, col: 6 },
-  "岩手県": { row: 4, col: 7 },
-
-  "山形県": { row: 5, col: 6 },
-  "宮城県": { row: 5, col: 7 },
-
-  "福島県": { row: 6, col: 7 },
-
-
-  /*
-    関東
-  */
-
-  "群馬県": { row: 7, col: 6 },
-  "栃木県": { row: 7, col: 7 },
-  "茨城県": { row: 7, col: 8 },
-
-  "埼玉県": { row: 8, col: 7 },
-
-  "山梨県": { row: 9, col: 6 },
-  "東京都": { row: 9, col: 7 },
-  "千葉県": { row: 9, col: 8 },
-
-  "神奈川県": { row: 10, col: 7 },
-
-
-  /*
-    甲信越・北陸
-  */
-
-  "新潟県": { row: 7, col: 5 },
-
-  "富山県": { row: 8, col: 4 },
-  "長野県": { row: 8, col: 5 },
-
-  "石川県": { row: 9, col: 4 },
-
-  "福井県": { row: 10, col: 4 },
-
-
-  /*
-    東海
-  */
-
-  "岐阜県": { row: 10, col: 5 },
-
-  "静岡県": { row: 11, col: 6 },
-  "愛知県": { row: 11, col: 5 },
-
-  "三重県": { row: 12, col: 5 },
-
-
-  /*
-    近畿
-  */
-
-  "滋賀県": { row: 11, col: 4 },
-  "京都府": { row: 11, col: 3 },
-
-  "兵庫県": { row: 12, col: 2 },
-  "大阪府": { row: 12, col: 3 },
-  "奈良県": { row: 12, col: 4 },
-
-  "和歌山県": { row: 13, col: 3 },
-
-
-  /*
-    中国
-  */
-
-  "島根県": { row: 14, col: 1 },
-  "鳥取県": { row: 14, col: 2 },
-
-  "山口県": { row: 15, col: 1 },
-  "広島県": { row: 15, col: 2 },
-  "岡山県": { row: 15, col: 3 },
-
-
-  /*
-    四国
-  */
-
-  "香川県": { row: 16, col: 3 },
-
-  "愛媛県": { row: 17, col: 2 },
-  "徳島県": { row: 17, col: 3 },
-
-  "高知県": { row: 18, col: 2 },
-
-
-  /*
-    九州
-  */
-
-  "福岡県": { row: 16, col: 1 },
-
-  "佐賀県": { row: 17, col: 1 },
-
-  "長崎県": { row: 18, col: 1 },
-
-  "大分県": { row: 16, col: 2 },
-
-  "熊本県": { row: 19, col: 2 },
-
-  "宮崎県": { row: 20, col: 2 },
-
-  "鹿児島県": { row: 21, col: 2 },
-
-
-  /*
-    沖縄
-  */
-
-  "沖縄県": { row: 22, col: 1 }
+  "栃木県": {
+    row: 6,
+    col: 13
+  },
+
+
+  "石川県": {
+    row: 7,
+    col: 10
+  },
+
+  "山梨県": {
+    row: 7,
+    col: 11
+  },
+
+  "埼玉県": {
+    row: 7,
+    col: 12
+  },
+
+  "茨城県": {
+    row: 7,
+    col: 13
+  },
+
+
+  "福井県": {
+    row: 8,
+    col: 9
+  },
+
+  "岐阜県": {
+    row: 8,
+    col: 10
+  },
+
+  "長野県": {
+    row: 8,
+    col: 11
+  },
+
+  "東京都": {
+    row: 8,
+    col: 12
+  },
+
+  "千葉県": {
+    row: 8,
+    col: 13
+  },
+
+
+  /* 中国・近畿・東海 */
+
+  "島根県": {
+    row: 9,
+    col: 5
+  },
+
+  "鳥取県": {
+    row: 9,
+    col: 6
+  },
+
+  "兵庫県": {
+    row: 9,
+    col: 7
+  },
+
+  "京都府": {
+    row: 9,
+    col: 8
+  },
+
+  "滋賀県": {
+    row: 9,
+    col: 9
+  },
+
+  "愛知県": {
+    row: 9,
+    col: 10
+  },
+
+  "静岡県": {
+    row: 9,
+    col: 11
+  },
+
+  "神奈川県": {
+    row: 9,
+    col: 12
+  },
+
+
+  "山口県": {
+    row: 10,
+    col: 4
+  },
+
+  "広島県": {
+    row: 10,
+    col: 5
+  },
+
+  "岡山県": {
+    row: 10,
+    col: 6
+  },
+
+  "大阪府": {
+    row: 10,
+    col: 7
+  },
+
+  "奈良県": {
+    row: 10,
+    col: 8
+  },
+
+  "三重県": {
+    row: 10,
+    col: 9
+  },
+
+
+  "和歌山県": {
+    row: 11,
+    col: 8
+  },
+
+
+/* =====================
+   九州
+===================== */
+
+/*
+  福岡を佐賀の真上へ
+*/
+
+"福岡県": {
+  row: 11,
+  col: 2
+},
+
+"長崎県": {
+  row: 12,
+  col: 1
+},
+
+"佐賀県": {
+  row: 12,
+  col: 2
+},
+
+"大分県": {
+  row: 12,
+  col: 3
+},
+
+"熊本県": {
+  row: 13,
+  col: 2
+},
+
+"宮崎県": {
+  row: 13,
+  col: 3
+},
+
+"鹿児島県": {
+  row: 14,
+  col: 2
+},
+
+
+/* =====================
+   四国
+===================== */
+
+/*
+  九州との間を1列空けるため
+  四国を右へ1列移動
+*/
+
+"愛媛県": {
+  row: 12,
+  col: 5
+},
+
+"香川県": {
+  row: 12,
+  col: 6
+},
+
+"高知県": {
+  row: 13,
+  col: 5
+},
+
+"徳島県": {
+  row: 13,
+  col: 6
+},
+
+
+  /* 沖縄 */
+
+  "沖縄県": {
+    row: 15,
+    col: 1
+  }
 
 };
 
@@ -748,13 +850,6 @@ const videoList =
 let videos = [];
 
 
-/*
-  現在PC配置かスマホ配置かを記録
-*/
-
-let currentMapMode = "";
-
-
 
 /* ==================================================
    JSON読み込み
@@ -765,7 +860,9 @@ async function loadVideos() {
   try {
 
     const response =
-      await fetch("./videos.json");
+      await fetch(
+        "./videos.json"
+      );
 
 
     if (!response.ok) {
@@ -814,51 +911,17 @@ async function loadVideos() {
 
 
 /* ==================================================
-   PC / スマホ判定
-================================================== */
-
-function isMobile() {
-
-  return window.matchMedia(
-    "(max-width: 700px)"
-  ).matches;
-
-}
-
-
-
-/* ==================================================
    日本地図を作る
 ================================================== */
 
 function createMap() {
 
 
-  const mobile =
-    isMobile();
-
-
-  const newMode =
-    mobile
-      ? "mobile"
-      : "desktop";
-
-
-  currentMapMode =
-    newMode;
-
-
-  const positions =
-    mobile
-      ? mobilePositions
-      : desktopPositions;
-
-
   mapElement.innerHTML = "";
 
 
   Object.entries(
-    positions
+    prefecturePositions
   ).forEach(
     ([prefecture, position]) => {
 
@@ -883,7 +946,7 @@ function createMap() {
 
 
       /*
-        この県にある動画
+        この都道府県の動画数
       */
 
       const prefectureVideos =
@@ -945,38 +1008,6 @@ function createMap() {
 
 
 /* ==================================================
-   ブラウザ幅が変わったとき
-
-   PC ⇔ スマホの境界を越えた時だけ
-   地図を作り直す
-================================================== */
-
-window.addEventListener(
-  "resize",
-  () => {
-
-
-    const newMode =
-      isMobile()
-        ? "mobile"
-        : "desktop";
-
-
-    if (
-      newMode !==
-      currentMapMode
-    ) {
-
-      createMap();
-
-    }
-
-  }
-);
-
-
-
-/* ==================================================
    動画表示
 ================================================== */
 
@@ -1000,7 +1031,9 @@ function showVideos(
 
   clickedButton
     .classList
-    .add("selected");
+    .add(
+      "selected"
+    );
 
 
 
@@ -1019,8 +1052,12 @@ function showVideos(
 
   filteredVideos.sort(
     (a, b) =>
-      new Date(b["公開日"]) -
-      new Date(a["公開日"])
+      new Date(
+        b["公開日"]
+      ) -
+      new Date(
+        a["公開日"]
+      )
   );
 
 
@@ -1041,8 +1078,11 @@ function showVideos(
   filteredVideos.forEach(
     video => {
 
+
       const card =
-        createVideoCard(video);
+        createVideoCard(
+          video
+        );
 
 
       videoList.appendChild(
@@ -1056,7 +1096,9 @@ function showVideos(
 
   resultSection
     .classList
-    .add("show");
+    .add(
+      "show"
+    );
 
 
 
@@ -1076,7 +1118,9 @@ function showVideos(
    動画カード
 ================================================== */
 
-function createVideoCard(video) {
+function createVideoCard(
+  video
+) {
 
 
   const card =
@@ -1128,7 +1172,6 @@ function createVideoCard(video) {
 
   card.innerHTML = `
 
-
     <a
       class="thumbnail-link"
 
@@ -1154,16 +1197,16 @@ function createVideoCard(video) {
     </a>
 
 
-
     <div class="video-info">
 
 
       <div class="location">
 
-        📍 ${escapeHTML(location)}
+        📍 ${escapeHTML(
+          location
+        )}
 
       </div>
-
 
 
       <h3 class="video-title">
@@ -1175,21 +1218,17 @@ function createVideoCard(video) {
       </h3>
 
 
-
       ${
         introduced
 
           ? `
             <p class="introduced">
-
               🍴 ${introduced}
-
             </p>
           `
 
           : ""
       }
-
 
 
       ${
@@ -1197,15 +1236,12 @@ function createVideoCard(video) {
 
           ? `
             <p class="introduced">
-
               🏷️ ${tags}
-
             </p>
           `
 
           : ""
       }
-
 
 
       <div class="meta">
@@ -1225,7 +1261,6 @@ function createVideoCard(video) {
         }
 
       </div>
-
 
 
       <a
@@ -1260,7 +1295,9 @@ function createVideoCard(video) {
    HTMLエスケープ
 ================================================== */
 
-function escapeHTML(value) {
+function escapeHTML(
+  value
+) {
 
   return String(
     value ?? ""
@@ -1295,9 +1332,13 @@ function escapeHTML(value) {
 
 
 
-function escapeAttribute(value) {
+function escapeAttribute(
+  value
+) {
 
-  return escapeHTML(value);
+  return escapeHTML(
+    value
+  );
 
 }
 
