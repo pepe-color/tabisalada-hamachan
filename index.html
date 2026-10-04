@@ -69,26 +69,17 @@
       margin-bottom: 24px;
     }
 
-
-    /*
-      地図を包む箱
-    */
-
     .map-viewport {
       width: 100%;
       display: flex;
       justify-content: center;
-      overflow: hidden;
     }
 
 
     /*
-      ★ Ver.0.04
+      PC版日本地図
 
-      15列 → 13列！
-
-      右側に存在していた
-      空の14列目・15列目を撤去。
+      13列 × 14行
     */
 
     .japan-map {
@@ -97,20 +88,13 @@
       grid-template-columns:
         repeat(13, 58px);
 
-      grid-template-rows:
-        repeat(14, 48px);
+      grid-auto-rows: 48px;
 
       gap: 4px;
 
       width: max-content;
 
-      /*
-        地図内部の余白も
-        少しコンパクトに
-      */
       padding: 8px;
-
-      transform-origin: top center;
     }
 
 
@@ -135,8 +119,6 @@
     }
 
 
-    /* 動画あり */
-
     .prefecture.has-video {
       background: #e5d6f5;
       color: #55366f;
@@ -147,7 +129,6 @@
 
     .prefecture.has-video:hover {
       transform: translateY(-2px);
-
       background: #d6bdec;
 
       box-shadow:
@@ -155,8 +136,6 @@
         rgba(85, 54, 111, 0.18);
     }
 
-
-    /* 選択中 */
 
     .prefecture.selected {
       background: #765091;
@@ -166,11 +145,8 @@
 
     .count {
       display: block;
-
       margin-top: 2px;
-
       font-size: 10px;
-
       opacity: 0.8;
     }
 
@@ -187,25 +163,18 @@
       display: block;
     }
 
-
     .result-header {
       margin: 35px 0 20px;
     }
-
 
     #resultTitle {
       margin-bottom: 5px;
     }
 
-
     #resultCount {
       color: #777;
     }
 
-
-    /*
-      PCでは3列
-    */
 
     .video-list {
       display: grid;
@@ -219,9 +188,7 @@
 
     .video-card {
       background: white;
-
       border-radius: 16px;
-
       overflow: hidden;
 
       box-shadow:
@@ -238,11 +205,9 @@
 
     .thumbnail {
       display: block;
-
       width: 100%;
 
       aspect-ratio: 16 / 9;
-
       object-fit: cover;
     }
 
@@ -256,9 +221,7 @@
       margin-bottom: 8px;
 
       font-size: 14px;
-
       color: #765091;
-
       font-weight: bold;
     }
 
@@ -267,23 +230,19 @@
       margin: 0 0 12px;
 
       font-size: 17px;
-
       line-height: 1.5;
     }
 
 
     .introduced {
       margin: 0 0 12px;
-
       line-height: 1.6;
     }
 
 
     .meta {
       color: #888;
-
       font-size: 13px;
-
       margin-bottom: 15px;
     }
 
@@ -294,11 +253,9 @@
       text-decoration: none;
 
       background: #333;
-
       color: white;
 
       padding: 9px 14px;
-
       border-radius: 8px;
 
       font-size: 14px;
@@ -312,11 +269,9 @@
 
     .error {
       background: #fff0f0;
-
       color: #a00;
 
       padding: 20px;
-
       border-radius: 10px;
     }
 
@@ -347,9 +302,7 @@
 
 
       header {
-        padding:
-          26px 14px
-          20px;
+        padding: 26px 14px 20px;
       }
 
 
@@ -366,28 +319,13 @@
 
 
       main {
-        /*
-          ★左右余白をさらに削減
-        */
-
-        width:
-          calc(100% - 12px);
-
-        margin:
-          12px auto 40px;
+        width: calc(100% - 12px);
+        margin: 12px auto 40px;
       }
 
 
       .map-section {
-        /*
-          ★地図カード内の
-          左右余白もかなり削減
-        */
-
-        padding:
-          18px 4px
-          16px;
-
+        padding: 18px 4px 20px;
         border-radius: 16px;
       }
 
@@ -395,28 +333,59 @@
       .map-section h2 {
         font-size: 18px;
 
-        padding:
-          0 10px;
-
+        padding: 0 10px;
         margin-bottom: 12px;
       }
 
 
       .map-note {
         font-size: 12px;
-
         line-height: 1.5;
 
-        margin-bottom: 10px;
-
-        padding:
-          0 8px;
+        margin-bottom: 18px;
+        padding: 0 8px;
       }
 
 
       /*
-        スマホ動画一覧
+        ★ Ver.0.05
+
+        スマホでは縮小しない。
+
+        9列の縦長日本列島へ
+        配置そのものを変更！
       */
+
+      .japan-map {
+        grid-template-columns:
+          repeat(9, minmax(0, 1fr));
+
+        grid-auto-rows: 43px;
+
+        gap: 3px;
+
+        width: 100%;
+
+        padding: 4px;
+      }
+
+
+      .prefecture {
+        min-width: 0;
+
+        padding: 2px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+      }
+
+
+      .count {
+        font-size: 9px;
+        margin-top: 1px;
+      }
+
 
       .video-list {
         grid-template-columns: 1fr;
@@ -464,10 +433,7 @@
     </p>
 
 
-    <div
-      class="map-viewport"
-      id="mapViewport"
-    >
+    <div class="map-viewport">
 
       <div
         class="japan-map"
@@ -508,277 +474,233 @@
 
 
 /* ==================================================
-   日本地図配置データ
-
-   row = 上から何段目
-   col = 左から何列目
+   PC版 日本地図配置
 ================================================== */
 
-const prefecturePositions = {
-
-  /* 北海道 */
+const desktopPositions = {
 
-  "北海道": {
-    row: 1,
-    col: 13
-  },
+  "北海道": { row: 1, col: 13 },
 
-
-  /* 東北 */
-
-  "青森県": {
-    row: 3,
-    col: 12
-  },
+  "青森県": { row: 3, col: 12 },
 
-  "秋田県": {
-    row: 4,
-    col: 11
-  },
+  "秋田県": { row: 4, col: 11 },
+  "岩手県": { row: 4, col: 12 },
 
-  "岩手県": {
-    row: 4,
-    col: 12
-  },
+  "山形県": { row: 5, col: 11 },
+  "宮城県": { row: 5, col: 12 },
 
-  "山形県": {
-    row: 5,
-    col: 11
-  },
+  "福島県": { row: 6, col: 12 },
 
-  "宮城県": {
-    row: 5,
-    col: 12
-  },
 
-  "福島県": {
-    row: 6,
-    col: 12
-  },
+  "茨城県": { row: 7, col: 13 },
+  "栃木県": { row: 7, col: 12 },
+  "群馬県": { row: 7, col: 11 },
 
+  "埼玉県": { row: 8, col: 12 },
 
-  /* 関東 */
+  "千葉県": { row: 9, col: 13 },
+  "東京都": { row: 9, col: 12 },
 
-  "茨城県": {
-    row: 7,
-    col: 13
-  },
+  "神奈川県": { row: 10, col: 12 },
 
-  "栃木県": {
-    row: 7,
-    col: 12
-  },
 
-  "群馬県": {
-    row: 7,
-    col: 11
-  },
+  "新潟県": { row: 6, col: 10 },
 
-  "埼玉県": {
-    row: 8,
-    col: 12
-  },
+  "富山県": { row: 7, col: 9 },
+  "石川県": { row: 7, col: 8 },
 
-  "千葉県": {
-    row: 9,
-    col: 13
-  },
-
-  "東京都": {
-    row: 9,
-    col: 12
-  },
+  "福井県": { row: 8, col: 7 },
 
-  "神奈川県": {
-    row: 10,
-    col: 12
-  },
+  "山梨県": { row: 9, col: 11 },
+  "長野県": { row: 8, col: 10 },
 
 
-  /* 甲信越・北陸 */
+  "岐阜県": { row: 9, col: 8 },
 
-  "新潟県": {
-    row: 6,
-    col: 10
-  },
+  "静岡県": { row: 10, col: 10 },
+  "愛知県": { row: 10, col: 9 },
 
-  "富山県": {
-    row: 7,
-    col: 9
-  },
+  "三重県": { row: 11, col: 8 },
 
-  "石川県": {
-    row: 7,
-    col: 8
-  },
-
-  "福井県": {
-    row: 8,
-    col: 7
-  },
 
-  "山梨県": {
-    row: 9,
-    col: 11
-  },
+  "滋賀県": { row: 9, col: 7 },
+  "京都府": { row: 9, col: 6 },
 
-  "長野県": {
-    row: 8,
-    col: 10
-  },
+  "大阪府": { row: 10, col: 6 },
+  "兵庫県": { row: 10, col: 5 },
+  "奈良県": { row: 10, col: 7 },
 
-
-  /* 東海 */
+  "和歌山県": { row: 11, col: 6 },
 
-  "岐阜県": {
-    row: 9,
-    col: 8
-  },
 
-  "静岡県": {
-    row: 10,
-    col: 10
-  },
+  "鳥取県": { row: 9, col: 4 },
+  "島根県": { row: 9, col: 3 },
 
-  "愛知県": {
-    row: 10,
-    col: 9
-  },
+  "岡山県": { row: 10, col: 4 },
+  "広島県": { row: 10, col: 3 },
+  "山口県": { row: 10, col: 2 },
 
-  "三重県": {
-    row: 11,
-    col: 8
-  },
 
+  "徳島県": { row: 12, col: 5 },
+  "香川県": { row: 11, col: 4 },
 
-  /* 近畿 */
+  "愛媛県": { row: 12, col: 3 },
+  "高知県": { row: 13, col: 4 },
 
-  "滋賀県": {
-    row: 9,
-    col: 7
-  },
 
-  "京都府": {
-    row: 9,
-    col: 6
-  },
+  "福岡県": { row: 9, col: 1 },
 
-  "大阪府": {
-    row: 10,
-    col: 6
-  },
-
-  "兵庫県": {
-    row: 10,
-    col: 5
-  },
-
-  "奈良県": {
-    row: 10,
-    col: 7
-  },
+  "佐賀県": { row: 10, col: 1 },
+  "大分県": { row: 10, col: 2 },
 
-  "和歌山県": {
-    row: 11,
-    col: 6
-  },
-
-
-  /* 中国 */
-
-  "鳥取県": {
-    row: 9,
-    col: 4
-  },
-
-  "島根県": {
-    row: 9,
-    col: 3
-  },
-
-  "岡山県": {
-    row: 10,
-    col: 4
-  },
-
-  "広島県": {
-    row: 10,
-    col: 3
-  },
-
-  "山口県": {
-    row: 10,
-    col: 2
-  },
-
-
-  /* 四国 */
-
-  "徳島県": {
-    row: 12,
-    col: 5
-  },
-
-  "香川県": {
-    row: 11,
-    col: 4
-  },
-
-  "愛媛県": {
-    row: 12,
-    col: 3
-  },
-
-  "高知県": {
-    row: 13,
-    col: 4
-  },
-
-
-  /* 九州 */
-
-  "福岡県": {
-    row: 9,
-    col: 1
-  },
-
-  "佐賀県": {
-    row: 10,
-    col: 1
-  },
-
-  "長崎県": {
-    row: 11,
-    col: 1
-  },
-
-  "熊本県": {
-    row: 11,
-    col: 2
-  },
-
-  "大分県": {
-    row: 10,
-    col: 2
-  },
-
-  "宮崎県": {
-    row: 12,
-    col: 2
-  },
-
-  "鹿児島県": {
-    row: 13,
-    col: 2
-  },
-
-
-  /* 沖縄 */
-
-  "沖縄県": {
-    row: 14,
-    col: 1
-  }
+  "長崎県": { row: 11, col: 1 },
+  "熊本県": { row: 11, col: 2 },
+
+  "宮崎県": { row: 12, col: 2 },
+
+  "鹿児島県": { row: 13, col: 2 },
+
+  "沖縄県": { row: 14, col: 1 }
+
+};
+
+
+
+/* ==================================================
+   ★ スマホ版 日本地図配置
+
+   9列で縦長に再設計
+================================================== */
+
+const mobilePositions = {
+
+  /*
+    北海道
+  */
+
+  "北海道": { row: 1, col: 8 },
+
+
+  /*
+    東北
+  */
+
+  "青森県": { row: 3, col: 7 },
+
+  "秋田県": { row: 4, col: 6 },
+  "岩手県": { row: 4, col: 7 },
+
+  "山形県": { row: 5, col: 6 },
+  "宮城県": { row: 5, col: 7 },
+
+  "福島県": { row: 6, col: 7 },
+
+
+  /*
+    関東
+  */
+
+  "群馬県": { row: 7, col: 6 },
+  "栃木県": { row: 7, col: 7 },
+  "茨城県": { row: 7, col: 8 },
+
+  "埼玉県": { row: 8, col: 7 },
+
+  "山梨県": { row: 9, col: 6 },
+  "東京都": { row: 9, col: 7 },
+  "千葉県": { row: 9, col: 8 },
+
+  "神奈川県": { row: 10, col: 7 },
+
+
+  /*
+    甲信越・北陸
+  */
+
+  "新潟県": { row: 7, col: 5 },
+
+  "富山県": { row: 8, col: 4 },
+  "長野県": { row: 8, col: 5 },
+
+  "石川県": { row: 9, col: 4 },
+
+  "福井県": { row: 10, col: 4 },
+
+
+  /*
+    東海
+  */
+
+  "岐阜県": { row: 10, col: 5 },
+
+  "静岡県": { row: 11, col: 6 },
+  "愛知県": { row: 11, col: 5 },
+
+  "三重県": { row: 12, col: 5 },
+
+
+  /*
+    近畿
+  */
+
+  "滋賀県": { row: 11, col: 4 },
+  "京都府": { row: 11, col: 3 },
+
+  "兵庫県": { row: 12, col: 2 },
+  "大阪府": { row: 12, col: 3 },
+  "奈良県": { row: 12, col: 4 },
+
+  "和歌山県": { row: 13, col: 3 },
+
+
+  /*
+    中国
+  */
+
+  "島根県": { row: 14, col: 1 },
+  "鳥取県": { row: 14, col: 2 },
+
+  "山口県": { row: 15, col: 1 },
+  "広島県": { row: 15, col: 2 },
+  "岡山県": { row: 15, col: 3 },
+
+
+  /*
+    四国
+  */
+
+  "香川県": { row: 16, col: 3 },
+
+  "愛媛県": { row: 17, col: 2 },
+  "徳島県": { row: 17, col: 3 },
+
+  "高知県": { row: 18, col: 2 },
+
+
+  /*
+    九州
+  */
+
+  "福岡県": { row: 16, col: 1 },
+
+  "佐賀県": { row: 17, col: 1 },
+
+  "長崎県": { row: 18, col: 1 },
+
+  "大分県": { row: 16, col: 2 },
+
+  "熊本県": { row: 19, col: 2 },
+
+  "宮崎県": { row: 20, col: 2 },
+
+  "鹿児島県": { row: 21, col: 2 },
+
+
+  /*
+    沖縄
+  */
+
+  "沖縄県": { row: 22, col: 1 }
 
 };
 
@@ -787,12 +709,6 @@ const prefecturePositions = {
 /* ==================================================
    HTML要素
 ================================================== */
-
-const mapViewport =
-  document.getElementById(
-    "mapViewport"
-  );
-
 
 const mapElement =
   document.getElementById(
@@ -832,6 +748,13 @@ const videoList =
 let videos = [];
 
 
+/*
+  現在PC配置かスマホ配置かを記録
+*/
+
+let currentMapMode = "";
+
+
 
 /* ==================================================
    JSON読み込み
@@ -866,11 +789,6 @@ async function loadVideos() {
     createMap();
 
 
-    requestAnimationFrame(
-      fitMapToScreen
-    );
-
-
   } catch (error) {
 
     console.error(error);
@@ -896,16 +814,51 @@ async function loadVideos() {
 
 
 /* ==================================================
+   PC / スマホ判定
+================================================== */
+
+function isMobile() {
+
+  return window.matchMedia(
+    "(max-width: 700px)"
+  ).matches;
+
+}
+
+
+
+/* ==================================================
    日本地図を作る
 ================================================== */
 
 function createMap() {
 
+
+  const mobile =
+    isMobile();
+
+
+  const newMode =
+    mobile
+      ? "mobile"
+      : "desktop";
+
+
+  currentMapMode =
+    newMode;
+
+
+  const positions =
+    mobile
+      ? mobilePositions
+      : desktopPositions;
+
+
   mapElement.innerHTML = "";
 
 
   Object.entries(
-    prefecturePositions
+    positions
   ).forEach(
     ([prefecture, position]) => {
 
@@ -946,17 +899,13 @@ function createMap() {
 
 
 
-      /*
-        県名
-      */
-
       button.innerHTML =
         `<span>${prefecture}</span>`;
 
 
 
       /*
-        動画がある県
+        動画あり
       */
 
       if (count > 0) {
@@ -996,94 +945,39 @@ function createMap() {
 
 
 /* ==================================================
-   日本地図を画面幅に合わせる
-================================================== */
+   ブラウザ幅が変わったとき
 
-function fitMapToScreen() {
-
-
-  /*
-    まず元サイズへ戻す
-  */
-
-  mapElement.style.transform =
-    "scale(1)";
-
-
-  mapViewport.style.height =
-    "auto";
-
-
-
-  /*
-    地図本来のサイズ
-  */
-
-  const mapWidth =
-    mapElement.scrollWidth;
-
-
-  const mapHeight =
-    mapElement.scrollHeight;
-
-
-
-  /*
-    表示可能な横幅
-  */
-
-  const availableWidth =
-    mapViewport.clientWidth;
-
-
-
-  /*
-    地図が表示幅より大きい場合だけ
-    縮小する
-  */
-
-  const scale =
-    Math.min(
-      1,
-      availableWidth / mapWidth
-    );
-
-
-
-  /*
-    地図を拡大・縮小
-  */
-
-  mapElement.style.transform =
-    `scale(${scale})`;
-
-
-
-  /*
-    transformは見た目だけ変わるので
-    外側の高さも合わせる
-  */
-
-  mapViewport.style.height =
-    `${mapHeight * scale}px`;
-
-}
-
-
-
-/* ==================================================
-   ブラウザ幅変更時
+   PC ⇔ スマホの境界を越えた時だけ
+   地図を作り直す
 ================================================== */
 
 window.addEventListener(
   "resize",
-  fitMapToScreen
+  () => {
+
+
+    const newMode =
+      isMobile()
+        ? "mobile"
+        : "desktop";
+
+
+    if (
+      newMode !==
+      currentMapMode
+    ) {
+
+      createMap();
+
+    }
+
+  }
 );
 
 
 
 /* ==================================================
-   動画を表示
+   動画表示
 ================================================== */
 
 function showVideos(
@@ -1091,10 +985,6 @@ function showVideos(
   clickedButton
 ) {
 
-
-  /*
-    選択状態解除
-  */
 
   document
     .querySelectorAll(
@@ -1108,20 +998,11 @@ function showVideos(
     );
 
 
-
-  /*
-    選択中
-  */
-
   clickedButton
     .classList
     .add("selected");
 
 
-
-  /*
-    該当動画
-  */
 
   const filteredVideos =
     videos.filter(
@@ -1144,10 +1025,6 @@ function showVideos(
 
 
 
-  /*
-    見出し
-  */
-
   resultTitle.textContent =
     `📍 ${prefecture}`;
 
@@ -1157,17 +1034,9 @@ function showVideos(
 
 
 
-  /*
-    一覧リセット
-  */
-
   videoList.innerHTML = "";
 
 
-
-  /*
-    動画カード作成
-  */
 
   filteredVideos.forEach(
     video => {
@@ -1185,19 +1054,11 @@ function showVideos(
 
 
 
-  /*
-    結果表示
-  */
-
   resultSection
     .classList
     .add("show");
 
 
-
-  /*
-    結果までスクロール
-  */
 
   resultSection.scrollIntoView({
 
@@ -1229,18 +1090,10 @@ function createVideoCard(video) {
 
 
 
-  /*
-    YouTubeサムネイル
-  */
-
   const thumbnailUrl =
     `https://i.ytimg.com/vi/${video["動画ID"]}/hqdefault.jpg`;
 
 
-
-  /*
-    場所
-  */
 
   const location =
     video["市区町村"]
@@ -1250,10 +1103,6 @@ function createVideoCard(video) {
       : video["都道府県"];
 
 
-
-  /*
-    紹介したもの
-  */
 
   const introduced =
     video["紹介したもの"]
@@ -1265,11 +1114,6 @@ function createVideoCard(video) {
       : "";
 
 
-
-  /*
-    内容タグ
-    今は空欄でもOK
-  */
 
   const tags =
     video["内容タグ"]
