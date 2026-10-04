@@ -54,7 +54,6 @@
       border-radius: 20px;
       padding: 25px;
       margin-bottom: 30px;
-      overflow-x: auto;
     }
 
     .map-section h2 {
@@ -71,8 +70,24 @@
 
 
     /*
-      日本列島を
-      15列 × 14行のマスで表現
+      地図全体を包む箱
+
+      PCではそのまま。
+      スマホではJavaScriptで
+      中の地図だけ縮小する。
+    */
+
+    .map-viewport {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+
+    /*
+      日本列島
+
+      15列 × 14行
     */
 
     .japan-map {
@@ -87,9 +102,10 @@
       gap: 4px;
 
       width: max-content;
-      margin: 0 auto;
 
       padding: 15px;
+
+      transform-origin: top center;
     }
 
 
@@ -183,13 +199,7 @@
 
 
     /*
-      ★ここを変更！
-
-      PCでは常に3列。
-
-      動画が1本しかなくても
-      横幅いっぱいに伸びず、
-      3列のうち1列分だけ使う。
+      PCでは3列
     */
 
     .video-list {
@@ -326,20 +336,65 @@
 
     @media (max-width: 700px) {
 
+      body {
+        background: #f5f5f5;
+      }
+
+      header {
+        padding:
+          28px 18px
+          20px;
+      }
+
       h1 {
         font-size: 22px;
+        line-height: 1.5;
+      }
+
+      header p {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      main {
+        width:
+          calc(100% - 20px);
+
+        margin:
+          18px auto 40px;
       }
 
       .map-section {
-        padding: 18px 8px;
+        padding:
+          20px 10px;
+
+        border-radius: 16px;
       }
 
-      .japan-map {
-        transform-origin: top left;
+      .map-section h2 {
+        font-size: 18px;
       }
+
+      .map-note {
+        font-size: 12px;
+
+        line-height: 1.6;
+
+        margin-bottom: 18px;
+      }
+
+
+      /*
+        スマホでは動画カード1列
+      */
 
       .video-list {
         grid-template-columns: 1fr;
+      }
+
+
+      .result-header {
+        margin-top: 25px;
       }
 
     }
@@ -379,10 +434,24 @@
     </p>
 
 
+    <!--
+      ★ Ver.0.03
+
+      日本地図を
+      map-viewport で包んだ
+    -->
+
     <div
-      class="japan-map"
-      id="japanMap"
-    ></div>
+      class="map-viewport"
+      id="mapViewport"
+    >
+
+      <div
+        class="japan-map"
+        id="japanMap"
+      ></div>
+
+    </div>
 
   </section>
 
@@ -696,24 +765,40 @@ const prefecturePositions = {
    HTML要素
 ================================================== */
 
+const mapViewport =
+  document.getElementById(
+    "mapViewport"
+  );
+
+
 const mapElement =
-  document.getElementById("japanMap");
+  document.getElementById(
+    "japanMap"
+  );
 
 
 const resultSection =
-  document.getElementById("resultSection");
+  document.getElementById(
+    "resultSection"
+  );
 
 
 const resultTitle =
-  document.getElementById("resultTitle");
+  document.getElementById(
+    "resultTitle"
+  );
 
 
 const resultCount =
-  document.getElementById("resultCount");
+  document.getElementById(
+    "resultCount"
+  );
 
 
 const videoList =
-  document.getElementById("videoList");
+  document.getElementById(
+    "videoList"
+  );
 
 
 
@@ -758,6 +843,16 @@ async function loadVideos() {
     createMap();
 
 
+    /*
+      地図作成後に
+      スマホサイズ調整
+    */
+
+    requestAnimationFrame(
+      fitMapToScreen
+    );
+
+
   } catch (error) {
 
     console.error(error);
@@ -798,7 +893,9 @@ function createMap() {
 
 
       const button =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
 
       button.className =
@@ -815,7 +912,7 @@ function createMap() {
 
 
       /*
-        この県にある動画
+        この県の動画
       */
 
       const prefectureVideos =
@@ -881,6 +978,97 @@ function createMap() {
 
 
 /* ==================================================
+   ★ Ver.0.03
+   日本地図を画面幅に合わせる
+================================================== */
+
+function fitMapToScreen() {
+
+
+  /*
+    いったん元サイズに戻す
+  */
+
+  mapElement.style.transform =
+    "scale(1)";
+
+
+  mapViewport.style.height =
+    "auto";
+
+
+
+  /*
+    地図本来のサイズ
+  */
+
+  const mapWidth =
+    mapElement.scrollWidth;
+
+
+  const mapHeight =
+    mapElement.scrollHeight;
+
+
+
+  /*
+    地図を表示できる横幅
+  */
+
+  const availableWidth =
+    mapViewport.clientWidth;
+
+
+
+  /*
+    PCでは縮小しない。
+
+    地図が画面より大きい時だけ
+    縮小する。
+  */
+
+  const scale =
+    Math.min(
+      1,
+      availableWidth / mapWidth
+    );
+
+
+
+  /*
+    地図を縮小
+  */
+
+  mapElement.style.transform =
+    `scale(${scale})`;
+
+
+
+  /*
+    transformは見た目だけ縮むため、
+    外側の箱の高さも合わせる
+  */
+
+  mapViewport.style.height =
+    `${mapHeight * scale}px`;
+
+}
+
+
+
+/* ==================================================
+   画面サイズが変わった時も
+   地図サイズを再計算
+================================================== */
+
+window.addEventListener(
+  "resize",
+  fitMapToScreen
+);
+
+
+
+/* ==================================================
    動画を表示
 ================================================== */
 
@@ -889,6 +1077,10 @@ function showVideos(
   clickedButton
 ) {
 
+
+  /*
+    選択状態解除
+  */
 
   document
     .querySelectorAll(
@@ -903,11 +1095,19 @@ function showVideos(
 
 
 
+  /*
+    選択中
+  */
+
   clickedButton
     .classList
     .add("selected");
 
 
+
+  /*
+    該当動画
+  */
 
   const filteredVideos =
     videos.filter(
@@ -930,6 +1130,10 @@ function showVideos(
 
 
 
+  /*
+    見出し
+  */
+
   resultTitle.textContent =
     `📍 ${prefecture}`;
 
@@ -939,9 +1143,17 @@ function showVideos(
 
 
 
+  /*
+    一覧リセット
+  */
+
   videoList.innerHTML = "";
 
 
+
+  /*
+    動画カード作成
+  */
 
   filteredVideos.forEach(
     video => {
@@ -950,18 +1162,28 @@ function showVideos(
         createVideoCard(video);
 
 
-      videoList.appendChild(card);
+      videoList.appendChild(
+        card
+      );
 
     }
   );
 
 
 
+  /*
+    結果表示
+  */
+
   resultSection
     .classList
     .add("show");
 
 
+
+  /*
+    結果までスクロール
+  */
 
   resultSection.scrollIntoView({
 
@@ -994,8 +1216,7 @@ function createVideoCard(video) {
 
 
   /*
-    YouTube動画IDから
-    サムネイルを表示
+    YouTubeサムネイル
   */
 
   const thumbnailUrl =
@@ -1022,23 +1243,28 @@ function createVideoCard(video) {
 
   const introduced =
     video["紹介したもの"]
+
       ? escapeHTML(
           video["紹介したもの"]
         )
+
       : "";
 
 
 
   /*
     内容タグ
+
     今は空欄でもOK
   */
 
   const tags =
     video["内容タグ"]
+
       ? escapeHTML(
           video["内容タグ"]
         )
+
       : "";
 
 
